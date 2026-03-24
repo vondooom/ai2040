@@ -154,10 +154,40 @@ footer .social a{color:var(--dim);font-size:12px;margin:0 10px;transition:color 
 .lightbox-caption{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);color:var(--muted);font-size:12px;font-family:var(--mono);text-align:center;z-index:10000}
 
 /* Responsive */
-@media(max-width:640px){.nav-links{display:none}.stats{grid-template-columns:1fr 1fr}.scroll-cue{display:none}}
+@media(max-width:640px){.nav-links{display:none}.stats{grid-template-columns:1fr 1fr}.scroll-cue{display:none}.share-bar{flex-direction:column;gap:8px}.subscribe-box{margin:0 -8px}}
+
+/* Reading progress bar */
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--green);z-index:200;width:0;transition:width .1s linear}
+
+/* Social share floating bar */
+.share-bar{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;gap:8px;padding:10px 16px;background:rgba(17,24,32,.95);border:1px solid rgba(255,255,255,.08);border-radius:40px;backdrop-filter:blur(12px);z-index:90;opacity:0;transition:opacity .3s;pointer-events:none}
+.share-bar.show{opacity:1;pointer-events:auto}
+.share-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.1);background:transparent;color:var(--muted);font-size:12px;font-family:var(--mono);cursor:pointer;transition:all .2s;text-decoration:none;white-space:nowrap}
+.share-btn:hover{background:rgba(255,255,255,.06);color:#fff;border-color:rgba(255,255,255,.2)}
+.share-btn svg{width:14px;height:14px;fill:currentColor;flex-shrink:0}
+.share-btn.copied{color:var(--green);border-color:var(--green)}
+
+/* Subscribe section */
+.subscribe-box{margin:40px auto;max-width:480px;text-align:center;padding:32px 24px;background:var(--bg2);border:1px solid rgba(255,255,255,.06);border-radius:12px}
+.subscribe-box h3{font-family:var(--serif);font-size:22px;color:#fff;margin-bottom:6px}
+.subscribe-box p{font-size:13px;color:var(--muted);margin-bottom:16px}
+.subscribe-form{display:flex;gap:8px}
+.subscribe-form input{flex:1;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:var(--bg);color:#fff;font-size:14px;font-family:var(--sans);outline:none;transition:border-color .2s}
+.subscribe-form input:focus{border-color:var(--green)}
+.subscribe-form input::placeholder{color:var(--dim)}
+.subscribe-form button{padding:10px 20px;background:var(--green);color:#0a0e14;border:none;border-radius:8px;font-size:13px;font-weight:500;font-family:var(--sans);cursor:pointer;transition:opacity .2s;white-space:nowrap}
+.subscribe-form button:hover{opacity:.85}
+.subscribe-msg{font-size:12px;color:var(--green);margin-top:10px;display:none}
+
+/* Back to top */
+.back-top{position:fixed;bottom:24px;right:24px;width:40px;height:40px;border-radius:50%;background:rgba(17,24,32,.9);border:1px solid rgba(255,255,255,.08);color:var(--muted);font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:90;opacity:0;transition:opacity .3s;pointer-events:none;backdrop-filter:blur(8px)}
+.back-top.show{opacity:1;pointer-events:auto}
+.back-top:hover{color:#fff;border-color:rgba(255,255,255,.2)}
 </style>
 </head>
 <body>
+
+<div class="progress-bar" id="progressBar"></div>
 
 <nav class="nav">
   <a href="#" class="logo">AI <span>2040</span></a>
@@ -349,6 +379,19 @@ footer .social a{color:var(--dim);font-size:12px;margin:0 10px;transition:color 
   <p style="font-family:var(--serif);font-size:19px;color:#fff;margin-top:36px;line-height:1.5;font-style:italic">The radar chart goes from a spiky mess to a near-perfect circle. The machines are coming for every spoke on the wheel. The only question is: where do we choose to meet them?</p>
 </div></section>
 
+<!-- Subscribe -->
+<div class="w">
+  <div class="subscribe-box">
+    <h3>Stay ahead of the curve</h3>
+    <p>Get future projections, signal intelligence, and emerging tech analysis delivered to your inbox.</p>
+    <div class="subscribe-form" id="subscribeForm">
+      <input type="email" id="subEmail" placeholder="your@email.com" required>
+      <button onclick="handleSubscribe()">Subscribe</button>
+    </div>
+    <div class="subscribe-msg" id="subMsg">You're in. Watch your inbox.</div>
+  </div>
+</div>
+
 <footer>
   <div class="name">VonDoom</div>
   <p class="bio">Building at the intersection of humans and emerging tech for 30+ years. Co-Founder/CEO of Theia Interactive (enterprise XR studio - clients include Epic Games, NVIDIA, HP). Founder of GMI.gg (AI + blockchain marketing). Currently building Keywire.xyz, a real-time signal intelligence platform for the TCG and collectables market - tracking price spikes, inventory collapses, and creator-driven momentum across IP's.</p>
@@ -359,6 +402,16 @@ footer .social a{color:var(--dim);font-size:12px;margin:0 10px;transition:color 
     <a href="https://keywire.xyz" target="_blank">Keywire.xyz</a>
   </div>
 </footer>
+
+<!-- Share bar -->
+<div class="share-bar" id="shareBar">
+  <a class="share-btn" onclick="shareX()" href="javascript:void(0)"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Share on X</a>
+  <a class="share-btn" onclick="shareLinkedIn()" href="javascript:void(0)"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>LinkedIn</a>
+  <button class="share-btn" onclick="copyLink(this)"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>Copy link</button>
+</div>
+
+<!-- Back to top -->
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
 
 <script>
 // Tab switching
@@ -385,6 +438,77 @@ function closeLightbox(){
   document.body.style.overflow='';
 }
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLightbox()});
+
+// Reading progress bar
+window.addEventListener('scroll',function(){
+  var h=document.documentElement;
+  var pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;
+  document.getElementById('progressBar').style.width=pct+'%';
+  
+  // Show/hide share bar and back-to-top after scrolling past hero
+  var show=window.scrollY>600;
+  document.getElementById('shareBar').classList.toggle('show',show);
+  document.getElementById('backTop').classList.toggle('show',show);
+});
+
+// Social sharing
+var shareUrl='https://ai2040.xyz';
+var shareTitle='The 15-Year Map: How AI Eats Every Occupation by 2040';
+var shareText='The gap between what AI can do and what it\'s actually doing closes faster than most think. A projection in five eras by @cryptovondoom';
+
+function shareX(){
+  window.open('https://x.com/intent/tweet?text='+encodeURIComponent(shareText)+'&url='+encodeURIComponent(shareUrl),'_blank','width=550,height=420');
+}
+function shareLinkedIn(){
+  window.open('https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(shareUrl),'_blank','width=550,height=420');
+}
+function copyLink(btn){
+  navigator.clipboard.writeText(shareUrl).then(function(){
+    btn.classList.add('copied');
+    btn.innerHTML='<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Copied!';
+    setTimeout(function(){
+      btn.classList.remove('copied');
+      btn.innerHTML='<svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>Copy link';
+    },2000);
+  });
+}
+
+// Mailerlite subscribe
+function handleSubscribe(){
+  var email=document.getElementById('subEmail').value;
+  if(!email||!email.includes('@'))return;
+  
+  // Mailerlite API - replace GROUP_ID with your actual Mailerlite group ID
+  // For now, this uses a placeholder. Set up at app.mailerlite.com:
+  // 1. Create a group called "AI 2040"
+  // 2. Get your API key from Settings > API
+  // 3. Replace the fetch URL and headers below
+  
+  // Placeholder behavior - shows success message
+  // TODO: Replace with actual Mailerlite integration
+  document.getElementById('subscribeForm').style.display='none';
+  document.getElementById('subMsg').style.display='block';
+  
+  /* 
+  // ACTUAL MAILERLITE INTEGRATION - uncomment and configure:
+  fetch('https://connect.mailerlite.com/api/subscribers', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer YOUR_MAILERLITE_API_KEY'
+    },
+    body: JSON.stringify({
+      email: email,
+      groups: ['YOUR_GROUP_ID']
+    })
+  }).then(function(r){ return r.json() }).then(function(){
+    document.getElementById('subscribeForm').style.display='none';
+    document.getElementById('subMsg').style.display='block';
+  }).catch(function(){
+    alert('Something went wrong. Try again.');
+  });
+  */
+}
 </script>
 
 
