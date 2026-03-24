@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ai2040.xyz/sitemap.xml
