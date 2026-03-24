@@ -362,6 +362,37 @@ footer .social a{color:var(--dim);font-size:12px;margin:0 10px;transition:color 
   </div>
 </footer>
 
+<script>
+// Tab switching
+function sw(btn,show,hide){
+  btn.parentElement.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
+  btn.classList.add('active');
+  document.getElementById(show).classList.add('active');
+  document.getElementById(hide).classList.remove('active');
+}
+
+// Lightbox
+function openLightbox(box){
+  var activePanel=box.querySelector('.cpanel.active')||box;
+  var img=activePanel.querySelector('img');
+  if(!img)return;
+  var lb=document.getElementById('lightbox');
+  var lbImg=document.getElementById('lb-img');
+  var cap=box.querySelector('.chart-cap');
+  document.getElementById('lb-caption').textContent=cap?cap.textContent:'';
+  lbImg.src=img.src;
+  lbImg.style.display='block';
+  lbImg.style.maxWidth=Math.min(1100,window.innerWidth-48)+'px';
+  lb.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLightbox()});
+</script>
+
 
 
 
