@@ -384,11 +384,51 @@ footer .social a{color:var(--dim);font-size:12px;margin:0 10px;transition:color 
   <div class="subscribe-box">
     <h3>Stay ahead of the curve</h3>
     <p>Get future projections, signal intelligence, and emerging tech analysis delivered to your inbox.</p>
-    <div class="subscribe-form" id="subscribeForm">
-      <input type="email" id="subEmail" placeholder="your@email.com" required>
-      <button onclick="handleSubscribe()">Subscribe</button>
+    
+    <!-- Mailerlite Embedded Form -->
+    <div id="mlb2-38948498" class="ml-form-embedContainer ml-subscribe-form ml-subscribe-form-38948498">
+      <div class="ml-form-align-center">
+        <div class="ml-form-embedWrapper embedForm">
+          <div class="ml-form-embedBody ml-form-embedBodyDefault row-form">
+            <form class="ml-block-form" action="https://assets.mailerlite.com/jsonp/2219356/forms/182877898257991001/subscribe" data-code="" method="post" target="_blank">
+              <div class="ml-form-formContent">
+                <div class="ml-form-fieldRow ml-last-item">
+                  <div class="ml-field-group ml-field-email ml-validate-email ml-validate-required">
+                    <input aria-label="email" aria-required="true" type="email" class="form-control" data-inputmask="" name="fields[email]" placeholder="your@email.com" autocomplete="email" style="background:var(--bg);color:#fff;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:10px 14px;font-size:14px;font-family:var(--sans);width:100%;box-sizing:border-box">
+                  </div>
+                </div>
+              </div>
+              <input type="hidden" name="ml-submit" value="1">
+              <div class="ml-form-embedSubmit" style="margin-top:10px">
+                <button type="submit" class="primary" style="background:var(--green);color:#0a0e14;border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:500;font-family:var(--sans);cursor:pointer;width:100%">Subscribe</button>
+                <button disabled="disabled" style="display:none" type="button" class="loading">
+                  <div class="ml-form-embedSubmitLoad"></div>
+                  <span class="sr-only">Loading...</span>
+                </button>
+              </div>
+              <input type="hidden" name="anticsrf" value="true">
+            </form>
+          </div>
+          <div class="ml-form-successBody row-success" style="display:none">
+            <div class="ml-form-successContent" style="text-align:center;padding:20px 0">
+              <h4 style="color:var(--green);font-family:var(--serif);font-size:20px;margin-bottom:6px">You're in.</h4>
+              <p style="color:var(--muted);font-size:13px">Watch your inbox for future projections and signal intelligence.</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="subscribe-msg" id="subMsg">You're in. Watch your inbox.</div>
+    <script>
+    function ml_webform_success_38948498(){
+      var r=document.querySelector('.ml-subscribe-form-38948498 .row-success');
+      var f=document.querySelector('.ml-subscribe-form-38948498 .row-form');
+      if(r)r.style.display='block';
+      if(f)f.style.display='none';
+    }
+    </script>
+    <script src="https://groot.mailerlite.com/js/w/webforms.min.js?v95037e5bac78f29ed026832ca21a7c7b" type="text/javascript"></script>
+    <script>fetch("https://assets.mailerlite.com/jsonp/2219356/forms/182877898257991001/takel")</script>
+    <!-- End Mailerlite -->
   </div>
 </div>
 
@@ -471,43 +511,6 @@ function copyLink(btn){
       btn.innerHTML='<svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>Copy link';
     },2000);
   });
-}
-
-// Mailerlite subscribe
-function handleSubscribe(){
-  var email=document.getElementById('subEmail').value;
-  if(!email||!email.includes('@'))return;
-  
-  // Mailerlite API - replace GROUP_ID with your actual Mailerlite group ID
-  // For now, this uses a placeholder. Set up at app.mailerlite.com:
-  // 1. Create a group called "AI 2040"
-  // 2. Get your API key from Settings > API
-  // 3. Replace the fetch URL and headers below
-  
-  // Placeholder behavior - shows success message
-  // TODO: Replace with actual Mailerlite integration
-  document.getElementById('subscribeForm').style.display='none';
-  document.getElementById('subMsg').style.display='block';
-  
-  /* 
-  // ACTUAL MAILERLITE INTEGRATION - uncomment and configure:
-  fetch('https://connect.mailerlite.com/api/subscribers', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer YOUR_MAILERLITE_API_KEY'
-    },
-    body: JSON.stringify({
-      email: email,
-      groups: ['YOUR_GROUP_ID']
-    })
-  }).then(function(r){ return r.json() }).then(function(){
-    document.getElementById('subscribeForm').style.display='none';
-    document.getElementById('subMsg').style.display='block';
-  }).catch(function(){
-    alert('Something went wrong. Try again.');
-  });
-  */
 }
 </script>
 
